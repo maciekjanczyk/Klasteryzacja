@@ -53,12 +53,13 @@ dataloader = DataLoader("./data/iris2d.txt")
 dataset = dataloader.get_data()[0]
 k = 3
 y, t = k_means(dataset, k, 100)
-klaster = [[],[],[]]
+klaster = []
+for i in range(0, k):
+    klaster.append([])
 n = len(dataset)
 for i in range(0, n):
     klaster[y[i]].append(dataset[i])
-plt.plot([kl[0] for kl in klaster[0]], [kl[1] for kl in klaster[0]], 'o')
-plt.plot([kl[0] for kl in klaster[1]], [kl[1] for kl in klaster[1]], 'o')
-plt.plot([kl[0] for kl in klaster[2]], [kl[1] for kl in klaster[2]], 'o')
+for i in range(0, k):
+    plt.plot([kl[0] for kl in klaster[i]], [kl[1] for kl in klaster[i]], 'o')
 plt.plot([xy[0] for xy in t], [xy[1] for xy in t], 'o')
 plt.show()
