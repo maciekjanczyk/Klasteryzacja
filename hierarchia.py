@@ -3,22 +3,49 @@ import matplotlib.pyplot as plt
 from dataload import DataLoader
 
 
-def m_odleglosci(c):
+def average_linkage(c):
     ret = []
     len_c = len(c)
     for i in range(0, len_c):
-        ret.append([0.0] * len_c)
+        ret.append([float("inf")] * len_c)
     if len_c != 0:
         for i in range(0, len_c - 1):
-            g = c[i]
-            h = c[i+1]
-            d = 0
-            for j in range(0, len(c[i])):
-                for k in range(0, len(c[i+1])):
-                    d += metrics.euclides(c[i][j], c[i+1][k])
-            d *= 1.0 / float(len(g)) * float(len(h))
-            ret[i][i+1] = d
-            ret[i+1][i] = d
+            for ii in range(0, len_c):
+                if c[i] == c[ii]:
+                    ret[i][ii] = float("inf")
+                    continue
+                g = c[i]
+                h = c[ii]
+                d = 0
+                for j in range(0, len(c[i])):
+                    for k in range(0, len(c[ii])):
+                        d += metrics.euclides(c[i][j], c[ii][k])
+                d *= 1.0 / float(len(g)) * float(len(h))
+                ret[i][ii] = d
+                ret[ii][i] = d
+    return ret
+
+
+def single_linkage(c):
+    ret = []
+    len_c = len(c)
+    for i in range(0, len_c):
+        ret.append([float("inf")] * len_c)
+    if len_c != 0:
+        for i in range(0, len_c):
+            for ii in range(0, len_c):
+                if c[i] == c[ii]:
+                    ret[i][ii] = float("inf")
+                    continue
+                g = c[i]
+                h = c[ii]
+                d = float("inf")
+                for j in range(0, len(c[i])):
+                    for k in range(0, len(c[ii])):
+                        d2 = metrics.euclides(c[i][j], c[ii][k])
+                        d = d2 if d2 < d else d
+                ret[i][ii] = d
+                ret[ii][i] = d
     return ret
 
 
@@ -28,7 +55,7 @@ def dendogram(data_set, k):
     P = c
     i = 0
     while k < len(c):
-        d = m_odleglosci(c)
+        d = average_linkage(c)
         min_odl = min(min(x) for x in d)
         c1 = -1
         c2 = -1
@@ -38,6 +65,8 @@ def dendogram(data_set, k):
                     c1 = c[ii]
                     c2 = c[jj]
                     break
+        if c1 is c2:
+            print "TO SAMO!"
         P.remove(c1)
         P.remove(c2)
         P += [c1 + c2]
@@ -47,7 +76,7 @@ def dendogram(data_set, k):
 
 dataloader = DataLoader("./data/iris2d.txt")
 dataset = dataloader.get_data()[0]
-k = 75
+k = 3
 y = dendogram(dataset, k)
 n = len(dataset)
 for i in range(0, len(y)):
