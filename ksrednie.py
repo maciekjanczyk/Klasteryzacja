@@ -49,7 +49,7 @@ def k_means(data_set, k, max_iter=200):
     return y, t
 
 
-dataloader = DataLoader("./data/iris2d.txt")
+dataloader = DataLoader("./data/donut.txt")
 dataset = dataloader.get_data()[0]
 k = 3
 y, t = k_means(dataset, k, 100)
