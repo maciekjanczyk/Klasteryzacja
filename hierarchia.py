@@ -49,13 +49,13 @@ def single_linkage(c):
     return ret
 
 
-def dendogram(data_set, k):
+def dendogram(data_set, k, linkage):
     c = [[ds] for ds in data_set]
     n = len(data_set)
     P = c
     i = 0
     while k < len(c):
-        d = average_linkage(c)
+        d = linkage(c)
         min_odl = min(min(x) for x in d)
         c1 = -1
         c2 = -1
@@ -77,7 +77,7 @@ def dendogram(data_set, k):
 dataloader = DataLoader("./data/iris2d.txt")
 dataset = dataloader.get_data()[0]
 k = 3
-y = dendogram(dataset, k)
+y = dendogram(dataset, k, average_linkage)
 n = len(dataset)
 for i in range(0, len(y)):
     plt.plot([kl[0] for kl in y[i]], [kl[1] for kl in y[i]], 'o')

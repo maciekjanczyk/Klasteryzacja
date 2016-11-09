@@ -1,9 +1,15 @@
-import pickle
 import metrics
 from dataload import DataLoader
 import matplotlib.pyplot as plt
-from random import shuffle
-import numpy as np
+import random
+
+
+def add_noises(dataset, percentage, range):
+    k = int(percentage * len(dataset))
+    i =0
+    while i < k:
+        dataset.append([random.uniform(range[0],range[1]),random.uniform(range[0],range[1])])
+        i += 1
 
 
 def region_query(p, data_set, eps):
@@ -53,8 +59,9 @@ def dbscan(data_set, eps, min_pts):
 
 dataloader = DataLoader("./data/donut.txt")
 dataset = dataloader.get_data()[0]
+add_noises(dataset,0.1,[-3.0,3.0])
 
-klaster, szum = dbscan(dataset, 0.3, 6)
+klaster, szum = dbscan(dataset, 0.3, 12)
 k = len(klaster)
 for i in range(0, k):
     klaster.append([])
