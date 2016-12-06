@@ -73,12 +73,17 @@ def dendogram(data_set, k, linkage):
         i += 1
     return P
 
-
+visualization = False
 dataloader = DataLoader("./data/iris2d.txt")
-dataset = dataloader.get_data()[0]
+dataset = dataloader.get_data(normalize_inputs=True, normalize_outputs=True)[0]
 k = 3
 y = dendogram(dataset, k, average_linkage)
 n = len(dataset)
-for i in range(0, len(y)):
-    plt.plot([kl[0] for kl in y[i]], [kl[1] for kl in y[i]], 'o')
-plt.show()
+if visualization:
+    for i in range(0, len(y)):
+        plt.plot([kl[0] for kl in y[i]], [kl[1] for kl in y[i]], 'o')
+    plt.show()
+else:
+    for i in range(0, len(y)):
+        print("Cluster {0}: {1} ({2}%)".format(i, len(y[i]), float(len(y[i])/float(n)*100.0)))
+    print("Num of instances: " + str(n))

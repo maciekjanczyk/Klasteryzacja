@@ -57,17 +57,24 @@ def dbscan(data_set, eps, min_pts):
     return clusters, noise
 
 
-dataloader = DataLoader("./data/donut.txt")
-dataset = dataloader.get_data()[0]
-add_noises(dataset,0.1,[-3.0,3.0])
+visualization = False
+dataloader = DataLoader("./data/glass.txt")
+dataset = dataloader.get_data(normalize_inputs=True, normalize_outputs=True)[0]
+#add_noises(dataset,0.1,[-3.0,3.0]
 
-klaster, szum = dbscan(dataset, 0.3, 12)
+klaster, szum = dbscan(dataset, 0.005, 2)
 k = len(klaster)
 for i in range(0, k):
     klaster.append([])
 n = len(dataset)
 il = sum(len(kl) for kl in klaster)
-for i in range(0, k):
-    plt.plot([kl[0] for kl in klaster[i]], [kl[1] for kl in klaster[i]], 'o')
-plt.plot([kl[0] for kl in szum], [kl[1] for kl in szum], 'o', color='grey')
-plt.show()
+if visualization:
+    for i in range(0, k):
+        plt.plot([kl[0] for kl in klaster[i]], [kl[1] for kl in klaster[i]], 'o')
+    plt.plot([kl[0] for kl in szum], [kl[1] for kl in szum], 'o', color='grey')
+    plt.show()
+else:
+    for i in range(0, len(klaster)):
+        print("Cluster {0}: {1} ({2}%)".format(i, len(klaster[i]), float(len(klaster[i])/float(n)*100.0)))
+    print("Noises: {0} ({1}%)".format(len(szum), float(len(szum) / float(n) * 100.0)))
+    print("Num of instances: " + str(n))

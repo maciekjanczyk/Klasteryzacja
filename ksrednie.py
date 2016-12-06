@@ -49,17 +49,23 @@ def k_means(data_set, k, max_iter=200):
     return y, t
 
 
-dataloader = DataLoader("./data/donut.txt")
+visualization = False
+dataloader = DataLoader("./data/glass.txt")
 dataset = dataloader.get_data()[0]
-k = 3
-y, t = k_means(dataset, k, 100)
+k = 7
+y, t = k_means(dataset, k, 500)
 klaster = []
 for i in range(0, k):
     klaster.append([])
 n = len(dataset)
 for i in range(0, n):
     klaster[y[i]].append(dataset[i])
-for i in range(0, k):
-    plt.plot([kl[0] for kl in klaster[i]], [kl[1] for kl in klaster[i]], 'o')
-plt.plot([xy[0] for xy in t], [xy[1] for xy in t], 'o')
-plt.show()
+if visualization:
+    for i in range(0, k):
+        plt.plot([kl[0] for kl in klaster[i]], [kl[1] for kl in klaster[i]], 'o')
+    plt.plot([xy[0] for xy in t], [xy[1] for xy in t], 'o')
+    plt.show()
+else:
+    for i in range(0, len(klaster)):
+        print("Cluster {0}: {1} ({2}%)".format(i, len(klaster[i]), float(len(klaster[i])/float(n)*100.0)))
+    print("Num of instances: " + str(n))
